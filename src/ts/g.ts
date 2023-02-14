@@ -10,13 +10,7 @@ import { User } from "./models/User";
   */
 
 function getLength(jumpings: number[]): number {
-  let totalNumber = 0;
-
-  totalNumber = jumpings.reduce(
-    (jumpDistanceSoFar, currentJump) => jumpDistanceSoFar + currentJump
-  );
-
-  return totalNumber;
+  return jumpings.reduce((jumpDistanceSoFar, currentJump) => { return jumpDistanceSoFar + currentJump});
 }
 
 /*
@@ -24,18 +18,9 @@ function getLength(jumpings: number[]): number {
   */
 
 function getStudentStatus(student: Student): string {
-  student.passed =
-    student.name == "Sebastian"
-      ? student.handedInOnTime
-        ? true
-        : false
-      : false;
-
-  if (student.passed) {
-    return "VG";
-  } else {
-    return "IG";
-  }
+  student.passed = student.handedInOnTime ? true : false;
+  return student.name + student.passed ? " VG" : " IG";
+   
 }
 
 /*
@@ -44,20 +29,19 @@ function getStudentStatus(student: Student): string {
   */
 
 function averageWeeklyTemperature(temperatures: Temperature[]) {
-  let averageTemperature = 0;
+  let totalTempValue = 0;
+  let totalReadings = 0;
   const secondsInWeek = 604800000;
   
   for (let i = 0; i < temperatures.length; i++) {
-    if (temperatures[i].location === "Stockholm") {
-      if (temperatures[i].date.getTime() > Date.now() - secondsInWeek) {
-        averageTemperature += temperatures[i].value;
-      }
+    if (temperatures[i].location && temperatures[i].date.getTime() > Date.now() - secondsInWeek) {
+      totalTempValue += temperatures[i].value;  
+      totalReadings++;
     }
   }
 
-  return averageTemperature / 7;
+  return totalTempValue / totalReadings;
 }
-
 /*
   4. Följande funktion kommer att presentera ett objekt i dom:en. 
   Se om du kan göra det bättre. Inte bara presentationen räknas, även strukturer.
@@ -76,21 +60,17 @@ function showProduct(products: Product) {
   5. Följande funktion kommer presentera studenter. Men det finns ett antal saker som 
   går att göra betydligt bättre. Gör om så många som du kan hitta!
   */
-  function presentStudents(students: Student[]) {
-    for (const student of students) {
-        const container = document.createElement("div");
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        if (student.handedInOnTime) {
-        checkbox.checked = true;
-        } else {
-          checkbox.checked = false;
-        }
-        container.appendChild(checkbox);
-        const listOfStudents = document.querySelector("ul#passedstudents");
-        listOfStudents?.appendChild(container);
-    }
+function presentStudents(students: Student[]) {
+  for (const student of students) {
+      const container = document.createElement("div");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      container.appendChild(checkbox);
+      checkbox.checked = student.handedInOnTime ? true : false;
+      const listOfStudents = document.querySelector(student.handedInOnTime ? "ul#passedstudents" : "ul#failedstudents");
+      listOfStudents?.appendChild(container);
   }
+}
 
 /*
   6. Skriv en funktion som skall slå ihop följande texter på ett bra sätt:
@@ -114,15 +94,12 @@ function showProduct(products: Product) {
 function createUser(users: User) {
   // Validation
 
-  const ageDiff = Date.now() - users.birthday.getTime();
-  const ageDate = new Date(ageDiff);
-  const userAge = Math.abs(ageDate.getUTCFullYear() - 1970);
+  const ageDiff = Date.now() - users.birthday.getTime(); 
+  const userAge = Math.abs(new Date(ageDiff).getUTCFullYear() - 1970);
 
   console.log(userAge);
-
-  if (!(userAge < 20)) {
-    // Logik för att skapa en användare
-  } else {
-    return "Du är under 20 år";
-  }
+  return userAge < 20 ? 
+  "Du är under 20 år" : 
+  "Do something else ";  // Logik för att skapa en användare
+  
 }
