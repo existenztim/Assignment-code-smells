@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Product } from "./models/Product";
+import { Student } from "./models/Student";
+import { Temperature } from "./models/Temperature";
+import { User } from "./models/User";
 /*
   1. Se om du kan hitta två stycken code smells i följande funktion och rätta till dem.
   Funktionen tar emot en lista med längshoppslängder och syftet med funktionen är att summera
@@ -17,14 +22,6 @@ function getLength(jumpings: number[]): number {
 /*
   2. I detta exempel har vi fokuserat på if-statements. Se om du kan göra exemplet bättre!
   */
-
-class Student {
-  constructor(
-    public name: string,
-    public handedInOnTime: boolean,
-    public passed: boolean
-  ) {}
-}
 
 function getStudentStatus(student: Student): string {
   student.passed =
@@ -46,22 +43,19 @@ function getStudentStatus(student: Student): string {
   Det finns flera code smells att identifiera här. Vissa är lurigare än andra.
   */
 
-class Temp {
-  constructor(public q: string, public where: Date, public v: number) {}
-}
-
-function averageWeeklyTemperature(heights: Temp[]) {
-  let r = 0;
-
-  for (let who = 0; who < heights.length; who++) {
-    if (heights[who].q === "Stockholm") {
-      if (heights[who].where.getTime() > Date.now() - 604800000) {
-        r += heights[who].v;
+function averageWeeklyTemperature(temperatures: Temperature[]) {
+  let averageTemperature = 0;
+  const secondsInWeek = 604800000;
+  
+  for (let i = 0; i < temperatures.length; i++) {
+    if (temperatures[i].location === "Stockholm") {
+      if (temperatures[i].date.getTime() > Date.now() - secondsInWeek) {
+        averageTemperature += temperatures[i].value;
       }
     }
   }
 
-  return r / 7;
+  return averageTemperature / 7;
 }
 
 /*
@@ -69,72 +63,47 @@ function averageWeeklyTemperature(heights: Temp[]) {
   Se om du kan göra det bättre. Inte bara presentationen räknas, även strukturer.
   */
 
-function showProduct(
-  name: string,
-  price: number,
-  amount: number,
-  description: string,
-  image: string,
-  parent: HTMLElement
-) {
+function showProduct(products: Product) {
   const container = document.createElement("div");
-  const title = document.createElement("h4");
-  const pris = document.createElement("strong");
-  const imageTag = document.createElement("img");
-
-  title.innerHTML = name;
-  pris.innerHTML = price.toString();
-  imageTag.src = image;
-
-  container.appendChild(title);
-  container.appendChild(imageTag);
-  container.appendChild(pris);
-  parent.appendChild(container);
+  container.innerHTML = /*html */`
+    <h4>${products.name}</h4>
+    <strong>${products.price.toString}</strong> 
+    <img src = ${products.image}>
+  `
 }
 
 /*
   5. Följande funktion kommer presentera studenter. Men det finns ett antal saker som 
   går att göra betydligt bättre. Gör om så många som du kan hitta!
   */
-function presentStudents(students: Student[]) {
-  for (const student of students) {
-    if (student.handedInOnTime) {
-      const container = document.createElement("div");
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = true;
-
-      container.appendChild(checkbox);
-      const listOfStudents = document.querySelector("ul#passedstudents");
-      listOfStudents?.appendChild(container);
-    } else {
-      const container = document.createElement("div");
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = false;
-
-      container.appendChild(checkbox);
-      const listOfStudents = document.querySelector("ul#failedstudents");
-      listOfStudents?.appendChild(container);
+  function presentStudents(students: Student[]) {
+    for (const student of students) {
+        const container = document.createElement("div");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        if (student.handedInOnTime) {
+        checkbox.checked = true;
+        } else {
+          checkbox.checked = false;
+        }
+        container.appendChild(checkbox);
+        const listOfStudents = document.querySelector("ul#passedstudents");
+        listOfStudents?.appendChild(container);
     }
   }
-}
 
 /*
   6. Skriv en funktion som skall slå ihop följande texter på ett bra sätt:
   Lorem, ipsum, dolor, sit, amet
   Exemplet under löser problemet, men inte speciellt bra. Hur kan man göra istället?
   */
-function concatenateStrings() {
-  let result = "";
-  result += "Lorem";
-  result += "ipsum";
-  result += "dolor";
-  result += "sit";
-  result += "amet";
+  function concatenateStrings() {
 
-  return result;
-}
+    const texts: string[] = ["Lorem", "ipsum", "dolor", "sit", "amet"]
+    const sumOfTexts = texts.join(" ");
+    
+    return sumOfTexts;
+    }
 
 /* 
 7. Denna funktion skall kontrollera att en användare är över 20 år och göra någonting.
@@ -142,15 +111,10 @@ function concatenateStrings() {
     fler och fler parametrar behöver läggas till? T.ex. avatar eller adress. Hitta en bättre
     lösning som är hållbar och skalar bättre. 
 */
-function createUser(
-  name: string,
-  birthday: Date,
-  email: string,
-  password: string
-) {
+function createUser(users: User) {
   // Validation
 
-  const ageDiff = Date.now() - birthday.getTime();
+  const ageDiff = Date.now() - users.birthday.getTime();
   const ageDate = new Date(ageDiff);
   const userAge = Math.abs(ageDate.getUTCFullYear() - 1970);
 
