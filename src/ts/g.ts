@@ -17,31 +17,35 @@ function getLength(jumpings: number[]): number {
   2. I detta exempel har vi fokuserat på if-statements. Se om du kan göra exemplet bättre!
   */
 
-function getStudentStatus(student: Student): string {
-  student.passed = student.handedInOnTime ? true : false;
-  return student.name + student.passed ? " VG" : " IG";
-   
-}
+  function getStudentStatus(student: Student): string {
+    if (student.name == "Sebastian") {
+      student.passed = student.handedInOnTime ? true : false
+    } else {
+      student.passed = false
+    }
+  
+    return student.passed ? "VG" : "IG";
+  }
 
 /*
   3. Variabelnamn är viktiga. Kika igenom följande kod och gör om och rätt.
   Det finns flera code smells att identifiera här. Vissa är lurigare än andra.
   */
 
-function averageWeeklyTemperature(temperatures: Temperature[]) {
-  let totalTempValue = 0;
-  let totalReadings = 0;
-  const secondsInWeek = 604800000;
-  
-  for (let i = 0; i < temperatures.length; i++) {
-    if (temperatures[i].location && temperatures[i].date.getTime() > Date.now() - secondsInWeek) {
-      totalTempValue += temperatures[i].value;  
-      totalReadings++;
-    }
+  function averageWeeklyTemperature(temperatures: Temperature[]) {
+    const totalReadings = temperatures.length;
+    const milliSecondsInWeek = 604800000;
+    
+    return temperatures.reduce((accumulator: number, current: Temperature) => {
+      if (current.location === "Stockholm" && current.date.getTime() > Date.now() - milliSecondsInWeek) {
+        return accumulator + current.tempValue;
+      }
+      return accumulator;
+    }, 0
+    ) / totalReadings;
   }
 
-  return totalTempValue / totalReadings;
-}
+
 /*
   4. Följande funktion kommer att presentera ett objekt i dom:en. 
   Se om du kan göra det bättre. Inte bara presentationen räknas, även strukturer.
@@ -54,6 +58,7 @@ function showProduct(products: Product) {
     <strong>${products.price.toString}</strong> 
     <img src = ${products.image}>
   `
+  document.body.appendChild(container);
 }
 
 /*
@@ -64,9 +69,11 @@ function presentStudents(students: Student[]) {
   for (const student of students) {
       const container = document.createElement("div");
       const checkbox = document.createElement("input");
+
       checkbox.type = "checkbox";
       container.appendChild(checkbox);
-      checkbox.checked = student.handedInOnTime ? true : false;
+      checkbox.checked = student.handedInOnTime;
+
       const listOfStudents = document.querySelector(student.handedInOnTime ? "ul#passedstudents" : "ul#failedstudents");
       listOfStudents?.appendChild(container);
   }
@@ -91,15 +98,18 @@ function presentStudents(students: Student[]) {
     fler och fler parametrar behöver läggas till? T.ex. avatar eller adress. Hitta en bättre
     lösning som är hållbar och skalar bättre. 
 */
-function createUser(users: User) {
+function validateUserAge(users: User) {
   // Validation
-
+  const unixEpoch = 1970;
   const ageDiff = Date.now() - users.birthday.getTime(); 
-  const userAge = Math.abs(new Date(ageDiff).getUTCFullYear() - 1970);
+  const userAge = Math.abs(new Date(ageDiff).getUTCFullYear() - unixEpoch);
 
   console.log(userAge);
-  return userAge < 20 ? 
-  "Du är under 20 år" : 
-  "Do something else ";  // Logik för att skapa en användare
+  const minimumAge = 20;
+  if (userAge > minimumAge) {
+    // run createUser();
+  } else {
+    return "Du är under 20 år";
+  }  
   
 }
