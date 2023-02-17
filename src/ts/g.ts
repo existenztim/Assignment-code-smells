@@ -18,11 +18,7 @@ function getLength(jumpings: number[]): number {
   */
 
   function getStudentStatus(student: Student): string {
-    if (student.name == "Sebastian") {
-      student.passed = student.handedInOnTime ? true : false
-    } else {
-      student.passed = false
-    }
+    student.passed = student.name === "Sebastian" && student.handedInOnTime
   
     return student.passed ? "VG" : "IG";
   }
@@ -56,7 +52,7 @@ function showProduct(products: Product) {
   container.innerHTML = /*html */`
     <h4>${products.name}</h4>
     <strong>${products.price.toString}</strong> 
-    <img src = ${products.image}>
+    <img src =${products.image}>
   `
   document.body.appendChild(container);
 }
