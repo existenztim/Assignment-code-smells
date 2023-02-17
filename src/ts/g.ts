@@ -17,29 +17,29 @@ function getLength(jumpings: number[]): number {
   2. I detta exempel har vi fokuserat på if-statements. Se om du kan göra exemplet bättre!
   */
 
-  function getStudentStatus(student: Student): string {
-    student.passed = student.name === "Sebastian" && student.handedInOnTime
-  
-    return student.passed ? "VG" : "IG";
-  }
+function getStudentStatus(student: Student): string {
+  student.passed = student.name === "Sebastian" && student.handedInOnTime
+
+  return student.passed ? "VG" : "IG";
+}
 
 /*
   3. Variabelnamn är viktiga. Kika igenom följande kod och gör om och rätt.
   Det finns flera code smells att identifiera här. Vissa är lurigare än andra.
   */
 
-  function averageWeeklyTemperature(temperatures: Temperature[]) {
-    const totalReadings = temperatures.length;
-    const milliSecondsInWeek = 604800000;
-    
-    return temperatures.reduce((accumulator: number, current: Temperature) => {
-      if (current.location === "Stockholm" && current.date.getTime() > Date.now() - milliSecondsInWeek) {
-        return accumulator + current.tempValue;
-      }
-      return accumulator;
-    }, 0
-    ) / totalReadings;
-  }
+function averageWeeklyTemperature(temperatures: Temperature[]) {
+  const totalReadings = temperatures.length;
+  const milliSecondsInWeek = 604800000;
+  
+  return temperatures.reduce((prevReading: number, currReading: Temperature) => {
+    if (currReading.location === "Stockholm" && currReading.date.getTime() > Date.now() - milliSecondsInWeek) {
+      return prevReading + currReading.tempValue;
+    }
+    return prevReading;
+  }, 0
+  ) / totalReadings;
+}
 
 
 /*
@@ -54,7 +54,7 @@ function showProduct(products: Product) {
     <strong>${products.price.toString}</strong> 
     <img src =${products.image}>
   `
-  document.body.appendChild(container);
+  products.parent.appendChild(container);
 }
 
 /*
@@ -80,13 +80,13 @@ function presentStudents(students: Student[]) {
   Lorem, ipsum, dolor, sit, amet
   Exemplet under löser problemet, men inte speciellt bra. Hur kan man göra istället?
   */
-  function concatenateStrings() {
+function concatenateStrings() {
 
-    const texts: string[] = ["Lorem", "ipsum", "dolor", "sit", "amet"]
-    const sumOfTexts = texts.join(" ");
-    
-    return sumOfTexts;
-    }
+  const texts: string[] = ["Lorem", "ipsum", "dolor", "sit", "amet"]
+  const sumOfTexts = texts.join(" ");
+  
+  return sumOfTexts;
+}
 
 /* 
 7. Denna funktion skall kontrollera att en användare är över 20 år och göra någonting.
@@ -106,6 +106,5 @@ function validateUserAge(users: User) {
     // run createUser();
   } else {
     return "Du är under 20 år";
-  }  
-  
+  }   
 }

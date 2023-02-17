@@ -65,31 +65,17 @@ export const productList = JSON.parse(localStorage.getItem("savedList") || "[]")
 
 export function createProduct() {
   updateFloatingCart();
-  createBaseHtml();
+  initHtml();
   saveUpdatedList();
 }
 
-function createBaseHtml() {
+function initHtml() {
   for (let i = 0; i < productList.length; i++) {
     const dogProduct: HTMLDivElement = document.createElement("div");
     dogProduct.className = "dog-product";
 
-    const dogImgContainer: HTMLDivElement = document.createElement("div");
-    dogImgContainer.className = "dog-img-container";
-    dogProduct.appendChild(dogImgContainer);
-
-    const dogImg: HTMLImageElement = document.createElement("img");
-    dogImg.src = productList[i].picture;
-    dogImg.alt = productList[i].pictureAlt;
-    dogImgContainer.appendChild(dogImg);
-    
-    const cartSymbolContainer: HTMLDivElement = document.createElement("div");
-    cartSymbolContainer.className = "cart-symbol-container";
-    dogImgContainer.appendChild(cartSymbolContainer);
-
-    const cartSymbol: HTMLElement = document.createElement("i");
-    cartSymbol.className = "bi bi-bag-plus";
-    cartSymbolContainer.appendChild(cartSymbol);
+    const { dogImgContainer, dogImg }: { dogImgContainer: HTMLDivElement; dogImg: HTMLImageElement; } = createImgHtml(dogProduct, i);
+    const { cartSymbolContainer, cartSymbol }: { cartSymbolContainer: HTMLDivElement; cartSymbol: HTMLElement; } = createCartHtml(dogImgContainer);
 
     createTitleAndParagraph(i, dogProduct);
 
@@ -119,6 +105,29 @@ function createBaseHtml() {
       oldiesCategory.appendChild(dogProduct);
     }
   }
+}
+
+function createCartHtml(dogImgContainer: HTMLDivElement) {
+  const cartSymbolContainer: HTMLDivElement = document.createElement("div");
+  cartSymbolContainer.className = "cart-symbol-container";
+  dogImgContainer.appendChild(cartSymbolContainer);
+
+  const cartSymbol: HTMLElement = document.createElement("i");
+  cartSymbol.className = "bi bi-bag-plus";
+  cartSymbolContainer.appendChild(cartSymbol);
+  return { cartSymbolContainer, cartSymbol };
+}
+
+function createImgHtml(dogProduct: HTMLDivElement, i: number) {
+  const dogImgContainer: HTMLDivElement = document.createElement("div");
+  dogImgContainer.className = "dog-img-container";
+  dogProduct.appendChild(dogImgContainer);
+
+  const dogImg: HTMLImageElement = document.createElement("img");
+  dogImg.src = productList[i].picture;
+  dogImg.alt = productList[i].pictureAlt;
+  dogImgContainer.appendChild(dogImg);
+  return { dogImgContainer, dogImg };
 }
 
 function createTitleAndParagraph(i: number, dogProduct: HTMLDivElement) {
@@ -227,19 +236,19 @@ function createCartElements(cartProducts: CartProduct[], titleContainer: HTMLTab
     const productName: HTMLTableCellElement = document.createElement("th");
     titleContainer.appendChild(productName);
     productName.innerHTML = cartProducts[i].name;
-    productName.className = "hej";
+    productName.className = "cart-element";
 
     const amountText: HTMLTableCellElement = document.createElement("th");
     amountContainer.appendChild(amountText);
     amountText.innerHTML = "x" + cartProducts[i].amount;
-    amountText.className = "hej";
+    amountText.className = "cart-element";
 
     const amountQuantity: HTMLTableCellElement = document.createElement("th");
     productQuantity.appendChild(amountQuantity);
 
     const amountPlusBtn: HTMLButtonElement = document.createElement("button");
     amountQuantity.appendChild(amountPlusBtn);
-    amountQuantity.className = "hej";
+    amountQuantity.className = "cart-element";
 
     const minusIcon: HTMLSpanElement = document.createElement("i");
     amountPlusBtn.appendChild(minusIcon);
