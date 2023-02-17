@@ -29,7 +29,7 @@ function getStudentStatus(student: Student): string {
   */
 
 function averageWeeklyTemperature(temperatures: Temperature[]) {
-  const totalReadings = temperatures.length;
+  const totalReadings = 7;
   const milliSecondsInWeek = 604800000;
   
   return temperatures.reduce((prevReading: number, currReading: Temperature) => {
